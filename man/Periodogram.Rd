@@ -6,6 +6,9 @@
 \usage{
 Periodogram(data)
 }
+\arguments{
+\item{data}{Input data}
+}
 \description{
 Periodogram of univariate time series
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/gencode.R
 \name{CovarFARIMA}
 \alias{CovarFARIMA}
-\title{Covariance function of in mlw paper (21)}
+\title{Covariance function in mlw paper (21)}
 \usage{
 CovarFARIMA(N, d, delta, Sigmae)
 }
@@ -10,6 +10,8 @@ CovarFARIMA(N, d, delta, Sigmae)
 \item{N, }{sample size}
 
 \item{d, }{LRD parameter}
+
+\item{delta}{delta parameter}
 }
 \description{
 CovarFARIMA () Function

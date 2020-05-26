@@ -38,11 +38,11 @@ MLRD.glasso = function(data, m, lambda = "ebic", type="soft", approxTF=TRUE, gri
     Ghat = ret$Ghat;
   }
 
-  out = Complex.glasso(Ghat, Tt=Tt, lambda= lambda, type=type, gridTF=gridTF, gg=gg, bound=bound, debiasTF=debiasTF);
+  out = glasso.complex(Ghat, Tt=Tt, lambda= lambda, type=type, gridTF=gridTF, gg=gg, bound=bound, debiasTF=debiasTF);
 
   # Avagan et al. (2017) JCGS suggest to do glasso on half to reduce bias...
   #  Ghalf = Matpower(Ghat, 1/2);
-  #  out1 = Complex.glasso(Ghalf, Tt=Tt, lambda= lambda, gridTF=gridTF, gg=gg, bound=bound, debiasTF=debiasTF);
+  #  out1 = glasso.complex(Ghalf, Tt=Tt, lambda= lambda, gridTF=gridTF, gg=gg, bound=bound, debiasTF=debiasTF);
   #  xx = out1$iG%*%out1$iG
 
   fit = append(ret, out)
@@ -51,7 +51,7 @@ MLRD.glasso = function(data, m, lambda = "ebic", type="soft", approxTF=TRUE, gri
 }
 
 
-#' Complex.glasso() Function
+#' glasso.complex() Function
 #'
 #' @title Sparse estimation of inverse G using graphical lasso.
 #' @param Ghat, Estimated Ghat to be sparsely estimated using glasso
@@ -59,13 +59,13 @@ MLRD.glasso = function(data, m, lambda = "ebic", type="soft", approxTF=TRUE, gri
 #' @keywords Local Whittle estimation
 #' @export
 #' @examples
-#' Complex.glasso(Ghat, Tt, lambda="ebic")
+#' glasso.complex(Ghat, Tt, lambda="ebic")
 #'
 #'
 #'
 #'
 
-Complex.glasso = function(Ghat, Tt, lambda="ebic", type="soft", gridTF=TRUE, gg=1, bound=c(0.05, 1), debiasTF=FALSE){
+glasso.complex = function(Ghat, Tt, lambda="ebic", type="soft", gridTF=TRUE, gg=1, bound=c(0.05, 1), debiasTF=FALSE){
 
   ## Complex Glasso, also works for Real as well.
   glasso.admm = function(S, lambda=.2, gg=1, Tt=1, type, debiasTF=TRUE){
@@ -224,4 +224,89 @@ glassoD2 = function(S, R, maxIt=100, tol = 1e-6){
   # Theta = solve(W);
   return(list(Theta=solve(W), W=W))
 }
+
+
+
+#' threGhat.bic() Function
+#'
+#' @title Sparse estimation using thresholding method
+#' @param data, input data
+#' @param m, number of frequencies used in LW estimation
+#' @param lambda, Selection of lambda, ebic is default.
+#' @keywords Thresholding LW long-run variance matrix
+#' @export
+#' @examples
+#' threGhat.bic(data)
+#'
+#'
+#'
+#'
+#'#####################################################
+## Optimal lambda from BIC in the Thresholding method
+
+threGhat.bic = function(data, m, lambda = "ebic", bound, approxTF=TRUE, adaptiveTF=TRUE, eta=1, gg=1, debiasTF=FALSE){
+  Tt = dim(data)[2]; p = dim = dim(data)[1];
+
+  if(missing(m)){ m = floor(Tt^.8); }
+
+  #  ### If it takes too much to estimate D use univariate case
+  if(approxTF){
+    dinit = numeric(dim);
+    for(i in 1:p){
+      dinit[i] = lwe(data[i,], m, 0)[2];
+    }
+    ret = list(); ret$dhat = dinit;
+    I = Periodogram(data);
+    Ghat = LWGhat(I, dinit, m=m, Tt=Tt); ret$Ghat = Ghat;
+  } else{
+    ### First estimate D  ##############
+    ret = lwMLRD(data, m);
+    id = which(ret$dhat == 0 || ret$dhat == .5); ## If it hits boundary, use univariate one.
+    ret$dhat[id] = ret$dinit[id];
+    Ghat = ret$Ghat;
+  }
+
+  if(missing(bound)){
+    ss = summary(Mod(as.vector(Ghat)));
+    bound = c(max(ss[1], sqrt(log(dim)/Tt)), ss[6])
+  }
+
+  rhoset = seq(from=bound[1], to = bound[2], length=20);
+  if(adaptiveTF){
+    rr = lapply(rhoset, adaptivesoft.thre, G=Ghat, eta=eta, diagTF=FALSE)
+  }else{
+    rr = lapply(rhoset, soft.thre, G=Ghat, diagTF=FALSE)
+  }
+
+  bic = numeric(20);
+  for(j in 1:20){
+    Y = rr[[j]];
+    if(debiasTF){
+      Y = glassoD2(Ghat, R = 1*(Y!= 0) )$W; rr[[j]] = Y; }
+    n2loglik = Tt*(log(Det.complex(Y)) + Re(sum(diag(Ghat%*%solve(Y)))));
+    ell = sum( Y != 0) ;
+    bic[j] = n2loglik + ell*(log(Tt) + 4*gg*log(dim));
+  }
+
+  id = which.min(bic);
+  G = G.db = rr[[id]]
+  bic.db = min(bic);
+
+  out = list();
+  out$rhoset = rhoset; out$bic = bic;
+  out$lambda = rhoset[id];
+  out$Ghat = Ghat; # Full Ghat estimation
+  out$dhat  = ret$dhat;
+  out$G0 = G; # only thresholding
+  out$G = G.db; # reestimated to reduce bias
+  out$R = 1*(G.db != 0);
+  out$bic.db = bic.db;
+  out$debiasTF = debiasTF;
+  out$adaptiveTF = adaptiveTF;
+  return(out)
+}
+
+
+
+
 

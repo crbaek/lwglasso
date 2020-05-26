@@ -6,6 +6,9 @@
 \usage{
 Det.complex(G)
 }
+\arguments{
+\item{G}{Input complex matrix}
+}
 \description{
 Determinant of complex square matrix
 }

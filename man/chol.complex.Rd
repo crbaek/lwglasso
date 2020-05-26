@@ -6,6 +6,9 @@
 \usage{
 \method{chol}{complex}(G)
 }
+\arguments{
+\item{G}{Input complex matrix}
+}
 \description{
 chol.complex() Function
 }
