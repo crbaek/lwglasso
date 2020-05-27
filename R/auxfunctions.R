@@ -148,7 +148,6 @@ Det.complex = function(G){
 #'
 #' @title Periodogram of multivariate time series
 #' @param data Input data of dim*length
-#' @value Array of Perodograms over (i,j) dimension
 #' @keywords Periodogram
 #' @export
 #' @examples
