@@ -7,9 +7,9 @@
 GenMultivarGauss(R, N, isAsymm = TRUE)
 }
 \arguments{
-\item{R, }{given autocovariance matrix}
+\item{R}{given autocovariance matrix}
 
-\item{N, }{sample size}
+\item{N}{sample size}
 }
 \description{
 GenMultivarGauss () Function

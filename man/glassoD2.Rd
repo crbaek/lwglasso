@@ -2,17 +2,25 @@
 % Please edit documentation in R/mLRDglasso.R
 \name{glassoD2}
 \alias{glassoD2}
-\title{Sparse constrained estimation in complex Graphical model}
+\title{Constrained MLE for long-run variance matrix}
 \usage{
 glassoD2(S, R, maxIt = 100, tol = 1e-06)
 }
 \arguments{
-\item{S, }{input complex matrix}
+\item{S}{input complex long-run variance matrix}
 
-\item{R, }{constraint matrix}
+\item{R}{constraint matrix consisting of 1 (if nonzero) and 0 (if zero)}
+
+\item{maxIt}{Maximum iteration of algorithm. Default is 100}
+
+\item{tol}{Tolerance to stop iteratrion. Default is 1e-6}
 }
 \description{
-glassoD2() Function
+This function provides constrained MLE for long-run variance matrix. It is used to debias the estimated
+sparse long-run variance matrix using graphical Lasso.
+}
+\details{
+glassoD2
 }
 \examples{
 glassoD2(S, R)
@@ -20,8 +28,9 @@ glassoD2(S, R)
 
 
 }
-\keyword{complex}
-\keyword{constrained}
+\keyword{Constrained}
 \keyword{estimation}
-\keyword{matrix}
+\keyword{long-run}
+\keyword{matrix.}
 \keyword{of}
+\keyword{variance}

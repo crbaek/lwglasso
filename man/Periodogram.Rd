@@ -2,15 +2,15 @@
 % Please edit documentation in R/auxfunctions.R
 \name{Periodogram}
 \alias{Periodogram}
-\title{Periodogram Function}
+\title{Periodogram of multivariate time series}
 \usage{
 Periodogram(data)
 }
 \arguments{
-\item{data}{Input data}
+\item{data}{Input data of dim*length}
 }
 \description{
-Periodogram of univariate time series
+Periodogram Function
 }
 \examples{
 Periodogram(data)

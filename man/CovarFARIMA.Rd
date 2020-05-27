@@ -7,9 +7,9 @@
 CovarFARIMA(N, d, delta, Sigmae)
 }
 \arguments{
-\item{N, }{sample size}
+\item{N}{sample size}
 
-\item{d, }{LRD parameter}
+\item{d}{LRD parameter}
 
 \item{delta}{delta parameter}
 }

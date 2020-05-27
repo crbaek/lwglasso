@@ -2,19 +2,28 @@
 % Please edit documentation in R/auxfunctions.R
 \name{soft.thre}
 \alias{soft.thre}
-\title{soft.thre() Function}
+\title{softthresholding complex matrix G}
 \usage{
 soft.thre(G, phi, diagTF = TRUE)
 }
 \arguments{
-\item{G, }{phi, diagTF}
+\item{G}{Input complex matrix}
+
+\item{phi}{Threshold level parameter}
+
+\item{diagTF}{If TRUE, apply thresholding on the diagonal entries of G}
 }
 \description{
-softthresholding complex matrix G
+Soft-thresholding of comlex matrix G with threshould phi.
+}
+\details{
+soft.thre
 }
 \examples{
 soft.thre(G)
 
 
 }
-\keyword{soft.thre}
+\keyword{function}
+\keyword{soft}
+\keyword{thresholding}

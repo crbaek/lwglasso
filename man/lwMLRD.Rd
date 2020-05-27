@@ -2,15 +2,20 @@
 % Please edit documentation in R/lwestimation.R
 \name{lwMLRD}
 \alias{lwMLRD}
-\title{lwMLRD() Function}
+\title{Local Whittle estimation of multivariate time series}
 \usage{
 lwMLRD(data, m)
 }
 \arguments{
-\item{data, }{m}
+\item{data}{Input data (dim*length)}
+
+\item{m}{The number of frequencies used in estimation.  If missed, $m=\link{T^.8}$.}
 }
 \description{
-Local Whittle estimation of multivariate time series
+This function provides local Whittle estimation of multivariate long range dependent time series
+}
+\details{
+lwMLRD
 }
 \examples{
 lwMLRD(data, m)

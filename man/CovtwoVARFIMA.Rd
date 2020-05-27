@@ -4,22 +4,20 @@
 \alias{CovtwoVARFIMA}
 \title{two-sided VARFIMA(0, D, 0) model in SPIE paper equation (18)}
 \usage{
-CovtwoVARFIMA(N, d, R, X)
+CovtwoVARFIMA(N, d, G)
 }
 \arguments{
-\item{N, }{sample size}
+\item{N}{sample size}
 
-\item{d, }{LRD parameter, ensure the elements in d satisfy -1/2<d(k)<1/2}
+\item{d}{LRD parameter, ensure the elements in d satisfy -1/2<d(k)<1/2}
 
-\item{R, }{R is a real upper-triangular matrix representing sparsity}
-
-\item{X, }{X is also complex valued upper-triangular matrix such that invG = (RW)^H\%*\%(RH)}
+\item{G}{G is long-run variance matrix such that G = Z*t(Con(Z));}
 }
 \description{
-CovtwoVARFIMA() Function
+CovtwoVARFIMA Function
 }
 \examples{
-CovtwoVARFIMA(N, d, R, X)
+CovtwoVARFIMA(N, d, G)
 }
 \keyword{Gaussian}
 \keyword{Process}

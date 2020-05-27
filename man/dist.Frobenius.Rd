@@ -2,15 +2,15 @@
 % Please edit documentation in R/auxfunctions.R
 \name{dist.Frobenius}
 \alias{dist.Frobenius}
-\title{dist.Frobenius() Function}
+\title{Frobenious distance between two complex matrices}
 \usage{
 dist.Frobenius(G, H)
 }
-\arguments{
-\item{G, }{H}
-}
 \description{
-Frobenious distance between two complex matrices
+dist.Frobenius(G, H) calculates Frobenius distance between two complex matrices G and H.
+}
+\details{
+dist.Frobenius() Function
 }
 \examples{
 dist.Frobenius(G, H)

@@ -2,15 +2,22 @@
 % Please edit documentation in R/auxfunctions.R
 \name{hard.thre}
 \alias{hard.thre}
-\title{hard.thre() Function}
+\title{Hard thresholding complex matrix G}
 \usage{
 hard.thre(G, phi, diagTF = TRUE)
 }
 \arguments{
-\item{G, }{phi, diagTF}
+\item{G}{Input complex matrix}
+
+\item{phi}{Threshold level parameter}
+
+\item{diagTF}{If TRUE, apply thresholding on the diagonal entries of G}
 }
 \description{
-Hard thresholding complex matrix G
+Hard-thresholding of comlex matrix G with threshould phi.
+}
+\details{
+hard.thre() Function
 }
 \examples{
 hard.thre(G)
@@ -18,4 +25,4 @@ hard.thre(G)
 
 
 }
-\keyword{soft.thre}
+\keyword{hard.thre}

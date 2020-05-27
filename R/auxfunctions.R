@@ -1,8 +1,11 @@
-#' soft.thre() Function
+#' soft.thre
 #'
-#' softthresholding complex matrix G
-#' @param G, phi, diagTF
-#' @keywords soft.thre
+#' @title softthresholding complex matrix G
+#' @description Soft-thresholding of comlex matrix G with threshould phi.
+#' @param G Input complex matrix
+#' @param phi Threshold level parameter
+#' @param diagTF If TRUE, apply thresholding on the diagonal entries of G
+#' @keywords soft thresholding function
 #' @export
 #' @examples
 #' soft.thre(G)
@@ -26,9 +29,12 @@ return(out)
 
 #' hard.thre() Function
 #'
-#' Hard thresholding complex matrix G
-#' @param G, phi, diagTF
-#' @keywords soft.thre
+#' @title Hard thresholding complex matrix G
+#' @description Hard-thresholding of comlex matrix G with threshould phi.
+#' @param G Input complex matrix
+#' @param phi Threshold level parameter
+#' @param diagTF If TRUE, apply thresholding on the diagonal entries of G
+#' @keywords hard.thre
 #' @export
 #' @examples
 #' hard.thre(G)
@@ -52,11 +58,15 @@ hard.thre = function(G, phi, diagTF=TRUE){
 }
 
 
-#' adaptivesoft.thre() Function
+#' adaptivesoft.thre
 #'
-#' Adaptive soft-thresholding complex matrix G
-#' @param G, phi, diagTF
-#' @keywords soft.thre
+#' @title Adaptive soft-thresholding complex matrix G
+#' @description Hard-thresholding of comlex matrix G with threshould phi.
+#' @param G Input complex matrix
+#' @param phi Phi parameter in the adaptive threshold function.
+#' @param eta Eta parameter in the adaptive threshould function.
+#' @param diagTF If TRUE, apply thresholding on the diagonal entries of G
+#' @keywords adaptivesoft.thre
 #' @export
 #' @examples
 #' adaptivesoft.thre(G)
@@ -83,8 +93,8 @@ adaptivesoft.thre = function(G, phi, eta=2, diagTF=TRUE){
 
 #' dist.Frobenius() Function
 #'
-#'  Frobenious distance between two complex matrices
-#' @param G, H
+#' @title Frobenious distance between two complex matrices
+#' @description dist.Frobenius(G, H) calculates Frobenius distance between two complex matrices G and H.
 #' @keywords Frobenious norm
 #' @export
 #' @examples
@@ -100,8 +110,8 @@ dist.Frobenius = function(G, H){
 
 #' dist.spectral() Function
 #'
-#'  Spectral distance between two complex matrices
-#' @param G, H
+#' @title  Spectral distance between two complex matrices
+#' @description dist.spectral(G, H) calculates Spectral distance between two complex matrices G and H.
 #' @keywords Spectral norm
 #' @export
 #' @examples
@@ -109,7 +119,6 @@ dist.Frobenius = function(G, H){
 #'
 #'
 #'
-
 dist.spectral = function(G, H){
   aa = (G-H); bb = aa%*%t(Conj(aa));
   c = svd(bb)$d;
@@ -137,8 +146,9 @@ Det.complex = function(G){
 
 #' Periodogram Function
 #'
-#' Periodogram of univariate time series
-#' @param data Input data
+#' @title Periodogram of multivariate time series
+#' @param data Input data of dim*length
+#' @value Array of Perodograms over (i,j) dimension
 #' @keywords Periodogram
 #' @export
 #' @examples
@@ -165,17 +175,16 @@ Periodogram = function(data){
       I[i,j,]   = dft1*Conj(dft2)/(2*pi*Tt);
     }
   }
-
   return(I)
 }
 
 
-#' chol.complex() Function
-#' @title Cholesky decomposition of complex maxtrix
-#'
+#' chol.complex
+#' @title Cholesky decomposition of complex maxtrix G
+#' @usage chol.complex(G)
 #' @param G Input complex matrix
 #' @keywords (complex) Cholesky decomposition
-#' @export
+#' @export chol.complex
 #' @examples
 #' chol.complex(G)
 #'

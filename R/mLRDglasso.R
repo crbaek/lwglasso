@@ -1,12 +1,23 @@
 
 
-#' MLRD.glasso() Function
+#' @name MLRD.glasso
 #'
-#' @title two-stage estimatin of LRD parameter and sparse G using glasso
-#' @param data, matrix of dim*Tt
-#' @param m number of frequencies used in estimation
+#' @title two-stage estimation of LRD parameter and sparse G using graphical lasso
+#' @description This function estimates sparse long-run variance (complex) matrix of multivariate LRD model
+#' using local Whittle graphical lasso.
+#' @param data matrix of dim*Tt
+#' @param m number of frequencies used in estimation.  If missed, m=[T^.8].
+#' @param lambda "ebic" uses extended BIC criteria to select penalty parameter in graphical lasso.
+#' User also can provide numerical value.
+#' @param type Types of thresholding in ADMM algorithm. "hard", "soft" and "adaptive" threshold functions are possible.
+#' @param approxTF If TRUE, univariate LRD parameter is used in the estimation. Otherwise, multivariate LRD parameter estimator is used.
+#' @param gridTF If TRUE, penalty parameter is searched over interval provided on bound argument. Otherwise, optim function searches optimal
+#' lambda.
+#' @param gg The tuning parameter in the extended BIC criteria. Default value is 1. If gg=0, it is a usual BIC.
+#' @param bound Bound of grid search in extended BIC. Default value is (.05, 1)
+#' @param debiasTF If TRUE, debiased by applying constrained MLE introduced in the paper.
 #' @keywords Local Whittle estimation
-#' @export
+#' @export MLRD.glasso
 #' @examples
 #' MLRD.glasso(data, m)
 #'
@@ -14,7 +25,7 @@
 #'
 
 
-MLRD.glasso = function(data, m, lambda = "ebic", type="soft", approxTF=TRUE, gridTF=TRUE, gg=1, bound=c(0.05, 1), debiasTF=FALSE){
+MLRD.glasso = function(data, m, lambda = "ebic", type="soft", approxTF=TRUE, gridTF=TRUE, gg=1, bound=c(0.05, 1), debiasTF=TRUE){
   # data is dim*length matrix
   Tt = ncol(data);
   p = nrow(data);
@@ -51,11 +62,21 @@ MLRD.glasso = function(data, m, lambda = "ebic", type="soft", approxTF=TRUE, gri
 }
 
 
-#' glasso.complex() Function
+#' glasso.complex
 #'
 #' @title Sparse estimation of inverse G using graphical lasso.
-#' @param Ghat, Estimated Ghat to be sparsely estimated using glasso
-#' @param m number of frequencies used in estimation
+#' @description This function estimates sparse long-run variance (complex) matrix using graphical Lasso.
+#' @param Ghat Estimated (nonsparse) long-run variance matrix to be sparsely estimated using glasso
+#' @param Tt Data length
+#' @param lambda "ebic" uses extended BIC criteria to select penalty parameter in graphical lasso.
+#' User also can provide numerical value.
+#' @param type Types of thresholding in ADMM algorithm. "hard", "soft" and "adaptive" threshold functions are possible.
+#' @param approxTF If TRUE, univariate LRD parameter is used in the estimation. Otherwise, multivariate LRD parameter estimator is used.
+#' @param gridTF If TRUE, penalty parameter is searched over interval provided on bound argument. Otherwise, optim function searches optimal
+#' lambda.
+#' @param gg The tuning parameter in the extended BIC criteria. Default value is 1. If gg=0, it is a usual BIC.
+#' @param bound Bound of grid search in extended BIC. Default value is (.05, 1)
+#' @param debiasTF If TRUE, debiased by applying constrained MLE introduced in the paper.
 #' @keywords Local Whittle estimation
 #' @export
 #' @examples
@@ -164,12 +185,18 @@ glasso.complex = function(Ghat, Tt, lambda="ebic", type="soft", gridTF=TRUE, gg=
 }
 
 
-#' glassoD2() Function
+#' glassoD2
 #'
-#' @title Sparse constrained estimation in complex Graphical model
-#' @param S, input complex matrix
-#' @param R, constraint matrix
-#' @keywords constrained estimation of complex matrix
+#' @title Constrained MLE for long-run variance matrix
+#' @description This function provides constrained MLE for long-run variance matrix. It is used to debias the estimated
+#' sparse long-run variance matrix using graphical Lasso.
+#'
+#' @param S input complex long-run variance matrix
+#' @param R constraint matrix consisting of 1 (if nonzero) and 0 (if zero)
+#' @param maxIt Maximum iteration of algorithm. Default is 100
+#' @param tol Tolerance to stop iteratrion. Default is 1e-6
+#'
+#' @keywords Constrained estimation of long-run variance matrix.
 #' @export
 #' @examples
 #' glassoD2(S, R)
@@ -227,12 +254,23 @@ glassoD2 = function(S, R, maxIt=100, tol = 1e-6){
 
 
 
-#' threGhat.bic() Function
+#' threGhat.bic
+#'
 #'
 #' @title Sparse estimation using thresholding method
-#' @param data, input data
-#' @param m, number of frequencies used in LW estimation
-#' @param lambda, Selection of lambda, ebic is default.
+#' @description This function sparsely estimates long-run variance matrix of multivariate LRD series using threshoulding method.
+#' @param data input data
+#' @param m number of frequencies used in estimation. If missed, $m=T^.8$.
+#' @param lambda "ebic" uses extended BIC criteria to select penalty parameter in threshod function
+#' @param adaptiveTF Types of threshold function. If TRUE "adaptive" threshold function is used. Otherwise, soft-threshold
+#' function is used.
+#' @param approxTF If TRUE, univariate LRD parameter is used in the estimation. Otherwise, multivariate LRD parameter estimator is used.
+#' @param gridTF If TRUE, penalty parameter is searched over interval provided on bound argument. Otherwise, optim function searches optimal
+#' lambda.
+#' @param eta The parameter in the adaptive threshould function. Default is 1.
+#' @param gg The tuning parameter in the extended BIC criteria. Default value is 1. If gg=0, it is a usual BIC.
+#' @param bound Bound of grid search in extended BIC. Default value is (max(min(|Ghat|), sqrt(log(dim)/Tt)), max(|Ghat|))
+#' @param debiasTF If TRUE, debiased by applying constrained MLE introduced in the paper.
 #' @keywords Thresholding LW long-run variance matrix
 #' @export
 #' @examples
@@ -241,8 +279,6 @@ glassoD2 = function(S, R, maxIt=100, tol = 1e-6){
 #'
 #'
 #'
-#'#####################################################
-## Optimal lambda from BIC in the Thresholding method
 
 threGhat.bic = function(data, m, lambda = "ebic", bound, approxTF=TRUE, adaptiveTF=TRUE, eta=1, gg=1, debiasTF=FALSE){
   Tt = dim(data)[2]; p = dim = dim(data)[1];

@@ -1,8 +1,11 @@
 
-#' lwMLRD() Function
+#' lwMLRD
 #'
-#' Local Whittle estimation of multivariate time series
-#' @param data, m
+#' @title Local Whittle estimation of multivariate time series
+#' @description This function provides local Whittle estimation of multivariate long range dependent time series
+#'
+#' @param data Input data (dim*length)
+#' @param m The number of frequencies used in estimation.  If missed, $m=[T^.8]$.
 #' @keywords Local Whittle estimation
 #' @export
 #' @examples
@@ -57,10 +60,14 @@ lwMLRD = function(data, m){
 
 
 
-#' LWGhat() Function
+#' LWGhat
 #'
-#' Long-run variance estimation based on local Whittle estimation of multivariate time series
-#' @param I, d, m, Tt
+#' @title Long-run variance estimation based on local Whittle estimation of multivariate time series
+#' @describeIn This function provides long-run variance of multivariate LRD series for given LRD parameter d and periodograms.
+#' @param I Periodogram
+#' @param d LRD parameters
+#' @param m number of frequencies used in LW estimation of LRD parameters
+#' @param Tt The number of sample size
 #' @keywords Long-run variance estimation
 #' @export
 #' @examples
@@ -85,10 +92,14 @@ LWGhat = function(I, d, m, Tt){
 
 
 
-#' lwe() Function
+#' lwe
 #'
-#' Local Whittle estimation of LRD parameter for univariate time series
-#' @param data,m, lowerd, upperd
+#' @title Local Whittle estimation of LRD parameter for univariate time series
+#' @description This function provides the local Whittle estimation of LRD parameter.
+#' @param data Input data (univariate time series)
+#' @param m The number of frequencies used in estimation. If missing, then $T^{1/2}$ is used
+#' @param lowerd the lower bound of LW object function, default = 0
+#' @param upperd the upper bound of LW object function, default = 1
 #' @keywords Local Whittle LRD parameter estimation
 #' @export
 #' @examples
@@ -151,6 +162,69 @@ lwe <-function(data,m, lowerd, upperd){
     out$nf = m;
     out$lwd = lwd;
     out$chat = chat;}
+  return(out)
+}
+
+
+#' lweplot
+#'
+#' @title Plot of local Whittle estimator over the number of frequencies used
+#' @description lweplot depics local Whittle estimators over the number of frequencies used
+#' @param data Input data (univariate time series)
+#' @param m The maximum number of frequencies used in the plot. If missing, then $T^{.8}$ is used
+#' @param lowerd the lower bound of LW object function, default = -.5
+#' @param upperd the upper bound of LW object function, default = 1
+#' @keywords Plot of local Whittle LRD parameter estimators
+#' @export lweplot
+#' @examples
+#' lweplot(data)
+#'
+#'
+#'
+#'
+lweplot<-function(data, m, lowerd, upperd){
+  T = length(data);
+  if(missing(m)){ m = T^.8 };
+  if(missing(lowerd)){ lowerd = -.5};
+  if(missing(upperd)){ upperd = 1};
+
+  m = floor(m);
+
+  ######################################################################
+  # LW whittle estimator object function
+  ######################################################################
+  lw_R <- function(d, omega, power, m){
+    lambda = omega[1:m];
+    Ix = power[1:m];
+    lwd = log(mean((lambda^(2*d))*Ix)) - 2*d*mean(log(lambda));
+    return(lwd);
+  }
+
+  # First calculate periodogram
+  M=floor(T/2);
+  dft = fft(data);
+  dft = dft[2:M];
+  omega = 2*pi*(1:M)/T;
+  power   = (abs(dft)^2)/(2*pi*T);
+  nf = seq(10, m, 5);
+  lwd = 0*seq(1:length(nf));
+  for(i in 1:length(lwd)){
+    est = optim(.1, lw_R, omega = omega, power=power, m= nf[i], method = "L-BFGS-B", lower=lowerd, upper=upperd);
+    lwd[i] = est$par;
+  }
+
+  ub = lwd + qnorm(.975)/(2*sqrt(nf));
+  lb = lwd - qnorm(.975)/(2*sqrt(nf));
+
+  plot( nf, lwd, type="l", lty=1, xlab="Frequency", ylab="d", ylim=c(min(lb)-.1, max(ub)+.1), lwd=2);
+  points(nf, ub, type="l", lty=2, col="red")
+  points(nf, lb, type="l", lty=2, col="red")
+  title('Local Whittle Estimator');
+
+  out = list();
+  out$nf = nf;
+  out$lwd = lwd;
+
   return(out)
 }
 

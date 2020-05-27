@@ -2,15 +2,15 @@
 % Please edit documentation in R/auxfunctions.R
 \name{dist.spectral}
 \alias{dist.spectral}
-\title{dist.spectral() Function}
+\title{Spectral distance between two complex matrices}
 \usage{
 dist.spectral(G, H)
 }
-\arguments{
-\item{G, }{H}
-}
 \description{
-Spectral distance between two complex matrices
+dist.spectral(G, H) calculates Spectral distance between two complex matrices G and H.
+}
+\details{
+dist.spectral() Function
 }
 \examples{
 dist.spectral(G, H)

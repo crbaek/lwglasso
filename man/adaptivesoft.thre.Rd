@@ -2,15 +2,24 @@
 % Please edit documentation in R/auxfunctions.R
 \name{adaptivesoft.thre}
 \alias{adaptivesoft.thre}
-\title{adaptivesoft.thre() Function}
+\title{Adaptive soft-thresholding complex matrix G}
 \usage{
 adaptivesoft.thre(G, phi, eta = 2, diagTF = TRUE)
 }
 \arguments{
-\item{G, }{phi, diagTF}
+\item{G}{Input complex matrix}
+
+\item{phi}{Phi parameter in the adaptive threshold function.}
+
+\item{eta}{Eta parameter in the adaptive threshould function.}
+
+\item{diagTF}{If TRUE, apply thresholding on the diagonal entries of G}
 }
 \description{
-Adaptive soft-thresholding complex matrix G
+Hard-thresholding of comlex matrix G with threshould phi.
+}
+\details{
+adaptivesoft.thre
 }
 \examples{
 adaptivesoft.thre(G)
@@ -19,4 +28,4 @@ adaptivesoft.thre(G)
 
 
 }
-\keyword{soft.thre}
+\keyword{adaptivesoft.thre}

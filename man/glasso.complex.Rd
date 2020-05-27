@@ -16,12 +16,31 @@ glasso.complex(
 )
 }
 \arguments{
-\item{Ghat, }{Estimated Ghat to be sparsely estimated using glasso}
+\item{Ghat}{Estimated (nonsparse) long-run variance matrix to be sparsely estimated using glasso}
 
-\item{m}{number of frequencies used in estimation}
+\item{Tt}{Data length}
+
+\item{lambda}{"ebic" uses extended BIC criteria to select penalty parameter in graphical lasso.
+User also can provide numerical value.}
+
+\item{type}{Types of thresholding in ADMM algorithm. "hard", "soft" and "adaptive" threshold functions are possible.}
+
+\item{gridTF}{If TRUE, penalty parameter is searched over interval provided on bound argument. Otherwise, optim function searches optimal
+lambda.}
+
+\item{gg}{The tuning parameter in the extended BIC criteria. Default value is 1. If gg=0, it is a usual BIC.}
+
+\item{bound}{Bound of grid search in extended BIC. Default value is (.05, 1)}
+
+\item{debiasTF}{If TRUE, debiased by applying constrained MLE introduced in the paper.}
+
+\item{approxTF}{If TRUE, univariate LRD parameter is used in the estimation. Otherwise, multivariate LRD parameter estimator is used.}
 }
 \description{
-glasso.complex() Function
+This function estimates sparse long-run variance (complex) matrix using graphical Lasso.
+}
+\details{
+glasso.complex
 }
 \examples{
 glasso.complex(Ghat, Tt, lambda="ebic")

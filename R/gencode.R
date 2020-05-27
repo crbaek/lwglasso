@@ -3,8 +3,8 @@
 #' GenMultivarGauss () Function
 #'
 #' @title Generating Multivariate Gaussian process using circular embedding
-#' @param R, given autocovariance matrix
-#' @param N, sample size
+#' @param R given autocovariance matrix
+#' @param N sample size
 #' @keywords Gaussian Process generation
 #' @export
 #' @examples
@@ -106,8 +106,8 @@ GenMultivarGauss = function(R,N, isAsymm=TRUE){
 #' CovarFARIMA () Function
 #'
 #' @title Covariance function in mlw paper (21)
-#' @param N, sample size
-#' @param d, LRD parameter
+#' @param N sample size
+#' @param d LRD parameter
 #' @param delta delta parameter
 #' @keywords Gaussian Process generation
 #' @export
@@ -165,103 +165,18 @@ return(list(R=simplify2array(RR), RRneg=simplify2array(RRneg)))
 }
 
 
-
-#' CovtwoVARFIMA() Function
+#' CovtwoVARFIMA Function
 #'
 #' @title two-sided VARFIMA(0, D, 0) model in SPIE paper equation (18)
-#' @param N, sample size
-#' @param d, LRD parameter, ensure the elements in d satisfy -1/2<d(k)<1/2
-#' @param R, R is a real upper-triangular matrix representing sparsity
-#' @param X, X is also complex valued upper-triangular matrix such that invG = (RW)^H%*%(RH)
+#' @param N sample size
+#' @param d LRD parameter, ensure the elements in d satisfy -1/2<d(k)<1/2
+#' @param G G is long-run variance matrix such that G = Z*t(Con(Z));
 #' @keywords Gaussian Process generation
 #' @export
 #' @examples
-#' CovtwoVARFIMA(N, d, R, X)
+#' CovtwoVARFIMA(N, d, G)
 
-CovtwoVARFIMA = function(N, d, R, X){
-# R is a real upper-triangular matrix representing sparsity
-# X is also complex valued upper-triangular matrix such that invG = (RW)^H%*%(RH)
-# d is a LRD parameters
-  # ensure the elements in d satisfy -1/2<d(k)<1/2
-
-  if( sum((d<=-1/2 | d>=1/2)) > 0 ){
-    message("d does not satisfy -1/2<d(k)<1/2, for all k")
-  };
-
-  p = length(d);
-  rX = R*X; # Rademacher product
-  iG = t(Conj(rX))%*%rX;
-  Z = solve(rX);
-  eD = diag(exp(1i*(pi/2)*d));
-  eDm = diag(exp(-1i*(pi/2)*d));
-  Z = Z%*%eDm;
-  G = Z%*%(t(Conj(Z)))
-
-  Qp = Qn = matrix(0, p, p);
-  diag(Qp) = sqrt(2*pi)*eD%*%diag(Z);
-
-  for(j in 2:p){
-    for(k in 1:j){
-      c1 = Re(Z[j,k])/cos(d[j]*pi/2);
-      s1 = Im(Z[j,k])/sin(d[j]*pi/2);
-      Qp[j,k] = sqrt(2*pi)*(c1-s1)/2;
-      Qn[j,k] = sqrt(2*pi)*(c1+s1)/2;
-    }
-  }
-  Qp = Re(Qp); Qn = Re(Qn);
-  ## Check whether this gives the same G, equation (19) of SPIE paper
-  #W = eDm%*%Qp + eD%*%Qn
-  #W = W/sqrt(2*pi);
-  #G1 = W%*%(t(Conj(W)))
-  # Seems to be correct
-
-  ## Apply Prposition 5.1 to get the covariance function
-  b1 = Qn%*%(t(Qn));
-  b2 = Qn%*%(t(Qp));
-  b3 = Qp%*%(t(Qp));
-  b4 = Qp%*%(t(Qn));
-
-  Gamma0.R = function(n, b1, b2, b3, b4){
-
-  Gamma0 = matrix(0, p, p);
-  if(n > 0){
-  for(j in 1:p){
-    for(k in 1:p){
-      g1 = 2*gamma(1-d[j]-d[k])*sin(d[k]*pi)*exp(lgamma(n+d[k])-lgamma(n+1-d[j]));
-      g3 =  2*gamma(1-d[k]-d[j])*sin(d[j]*pi)*exp(lgamma(n+d[j])-lgamma(n+1-d[k]));
-      g4 = 2*pi*exp(lgamma(n+d[j]+d[k])-lgamma(d[j]+d[k]) -lgamma(1+n));
-      Gamma0[j,k] = g1*b1[j,k]+g3*b3[j,k]+g4*b4[j,k];
-    }}
-  } else{
-    for(j in 1:p){
-      for(k in 1:p){
-        g1 = 2*gamma(1-d[j]-d[k])*sin(d[k]*pi)*exp(lgamma(n+d[k])-lgamma(n+1-d[j]));
-        g3 =  2*gamma(1-d[k]-d[j])*sin(d[j]*pi)*exp(lgamma(n+d[j])-lgamma(n+1-d[k]));
-        g4 = 2*pi*exp(lgamma(n+d[j]+d[k])-lgamma(d[j]+d[k]) -lgamma(1+n));
-        Gamma0[j,k] = g1*b1[j,k]+g3*b2[j,k]+g3*b3[j,k]+g4*b4[j,k];
-      }}
-  }
-  return(Gamma0/(2*pi))
-  }
-
-  RR  = lapply(0:(N-1), Gamma0.R, b1=b1, b2=b2, b3=b3, b4=b4);
-  RRneg = lapply(RR, t);
-  ## Return object is a list
-  return(list(R=simplify2array(RR), RRneg=simplify2array(RRneg), G=G, iG=iG))
-}
-
-#' CovtwoVARFIMA2() Function
-#'
-#' @title two-sided VARFIMA(0, D, 0) model in SPIE paper equation (18)
-#' @param N, sample size
-#' @param d, LRD parameter, ensure the elements in d satisfy -1/2<d(k)<1/2
-#' @param G, G is long-run variance matrix such that G = Z*t(Con(Z));
-#' @keywords Gaussian Process generation
-#' @export
-#' @examples
-#' CovtwoVARFIMA2(N, d, G)
-
-CovtwoVARFIMA2= function(N, d, G){
+CovtwoVARFIMA= function(N, d, G){
   # G is long-run variance matrix such that G = Z*t(Con(Z));
   # Cholesky decomposition of complex-valued matrix G
   # d is a LRD parameters

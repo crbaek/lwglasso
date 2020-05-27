@@ -2,15 +2,15 @@
 % Please edit documentation in R/auxfunctions.R
 \name{chol.complex}
 \alias{chol.complex}
-\title{Cholesky decomposition of complex maxtrix}
+\title{Cholesky decomposition of complex maxtrix G}
 \usage{
-\method{chol}{complex}(G)
+chol.complex(G)
 }
 \arguments{
 \item{G}{Input complex matrix}
 }
 \description{
-chol.complex() Function
+chol.complex
 }
 \examples{
 chol.complex(G)

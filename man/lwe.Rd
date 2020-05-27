@@ -2,15 +2,24 @@
 % Please edit documentation in R/lwestimation.R
 \name{lwe}
 \alias{lwe}
-\title{lwe() Function}
+\title{Local Whittle estimation of LRD parameter for univariate time series}
 \usage{
 lwe(data, m, lowerd, upperd)
 }
 \arguments{
-\item{data, m, }{lowerd, upperd}
+\item{data}{Input data (univariate time series)}
+
+\item{m}{The number of frequencies used in estimation. If missing, then $T^{1/2}$ is used}
+
+\item{lowerd}{the lower bound of LW object function, default = 0}
+
+\item{upperd}{the upper bound of LW object function, default = 1}
 }
 \description{
-Local Whittle estimation of LRD parameter for univariate time series
+This function provides the local Whittle estimation of LRD parameter.
+}
+\details{
+lwe
 }
 \examples{
 lwe(data,m, lowerd=0, upperd=1)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/mLRDglasso.R
 \name{MLRD.glasso}
 \alias{MLRD.glasso}
-\title{two-stage estimatin of LRD parameter and sparse G using glasso}
+\title{two-stage estimation of LRD parameter and sparse G using graphical lasso}
 \usage{
 MLRD.glasso(
   data,
@@ -13,16 +13,33 @@ MLRD.glasso(
   gridTF = TRUE,
   gg = 1,
   bound = c(0.05, 1),
-  debiasTF = FALSE
+  debiasTF = TRUE
 )
 }
 \arguments{
-\item{data, }{matrix of dim*Tt}
+\item{data}{matrix of dim*Tt}
 
-\item{m}{number of frequencies used in estimation}
+\item{m}{number of frequencies used in estimation.  If missed, m=\link{T^.8}.}
+
+\item{lambda}{"ebic" uses extended BIC criteria to select penalty parameter in graphical lasso.
+User also can provide numerical value.}
+
+\item{type}{Types of thresholding in ADMM algorithm. "hard", "soft" and "adaptive" threshold functions are possible.}
+
+\item{approxTF}{If TRUE, univariate LRD parameter is used in the estimation. Otherwise, multivariate LRD parameter estimator is used.}
+
+\item{gridTF}{If TRUE, penalty parameter is searched over interval provided on bound argument. Otherwise, optim function searches optimal
+lambda.}
+
+\item{gg}{The tuning parameter in the extended BIC criteria. Default value is 1. If gg=0, it is a usual BIC.}
+
+\item{bound}{Bound of grid search in extended BIC. Default value is (.05, 1)}
+
+\item{debiasTF}{If TRUE, debiased by applying constrained MLE introduced in the paper.}
 }
 \description{
-MLRD.glasso() Function
+This function estimates sparse long-run variance (complex) matrix of multivariate LRD model
+using local Whittle graphical lasso.
 }
 \examples{
 MLRD.glasso(data, m)

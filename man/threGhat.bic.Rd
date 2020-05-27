@@ -17,14 +17,33 @@ threGhat.bic(
 )
 }
 \arguments{
-\item{data, }{input data}
+\item{data}{input data}
 
-\item{m, }{number of frequencies used in LW estimation}
+\item{m}{number of frequencies used in estimation. If missed, $m=T^.8$.}
 
-\item{lambda, }{Selection of lambda, ebic is default.}
+\item{lambda}{"ebic" uses extended BIC criteria to select penalty parameter in threshod function}
+
+\item{bound}{Bound of grid search in extended BIC. Default value is (max(min(|Ghat|), sqrt(log(dim)/Tt)), max(|Ghat|))}
+
+\item{approxTF}{If TRUE, univariate LRD parameter is used in the estimation. Otherwise, multivariate LRD parameter estimator is used.}
+
+\item{adaptiveTF}{Types of threshold function. If TRUE "adaptive" threshold function is used. Otherwise, soft-threshold
+function is used.}
+
+\item{eta}{The parameter in the adaptive threshould function. Default is 1.}
+
+\item{gg}{The tuning parameter in the extended BIC criteria. Default value is 1. If gg=0, it is a usual BIC.}
+
+\item{debiasTF}{If TRUE, debiased by applying constrained MLE introduced in the paper.}
+
+\item{gridTF}{If TRUE, penalty parameter is searched over interval provided on bound argument. Otherwise, optim function searches optimal
+lambda.}
 }
 \description{
-threGhat.bic() Function
+This function sparsely estimates long-run variance matrix of multivariate LRD series using threshoulding method.
+}
+\details{
+threGhat.bic
 }
 \examples{
 threGhat.bic(data)
@@ -32,7 +51,6 @@ threGhat.bic(data)
 
 
 
-#####################################################
 }
 \keyword{LW}
 \keyword{Thresholding}
