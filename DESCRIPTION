@@ -1,6 +1,6 @@
 Package: lwglasso
 Title: Local Whittle Graphical Lasso estimation for multivariate long-range depenent time series
-Version: 0.0.0.9000
+Version: 0.0.0.9100
 Authors@R: 
     person(given = "Changryong",
            family = "Baek",
