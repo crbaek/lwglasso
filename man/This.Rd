@@ -20,9 +20,9 @@ LWGhat
 }
 \section{Functions}{
 \itemize{
-\item \code{LWGhat}: function provides long-run variance of multivariate LRD series for given LRD parameter d and periodograms.
-}}
+\item \code{LWGhat()}: function provides long-run variance of multivariate LRD series for given LRD parameter d and periodograms.
 
+}}
 \examples{
 LWGhat(I, d, m, Tt)
 
